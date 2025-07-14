@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My To-Do List</title>
+     {% load static %}
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+</head>
+<body>
+    <h1>Tasks</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Enter task title" required>
+        <button type="submit">Add Task</button>
+    </form>
+    <form method="POST" action="{% url 'delete_all_tasks' %}">
+    {% csrf_token %}
+    <button type="submit">🧹 Delete All Tasks</button>
+</form>
+<div style="margin-bottom: 20px;">
+    <a href="/?filter=all"><button>📋 Show All</button></a>
+    <a href="/?filter=completed"><button>✅ Completed</button></a>
+    <a href="/?filter=not_completed"><button>❌ Not Completed</button></a>
+</div>
+
+    <ul>
+    {% for task in tasks %}
+        <li>
+            {{ task.title }} —
+            <form method="POST" action="{% url 'toggle_complete' task.id %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit">
+        {% if task.completed %}
+            ✅ Done
+        {% else %}
+            ❌ Not done
+        {% endif %}
+    </button>
+    
+</form>
+            <a href="{% url 'edit_task' task.id %}">🖊 Edit</a>
+            <a href="{% url 'delete_task' task.id %}">🗑️ Delete</a>  <!-- 👈 add this line -->
+        </li>
+    {% empty %}
+        <li>No tasks yet.</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
+
