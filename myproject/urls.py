@@ -23,3 +23,4 @@ urlpatterns = [
     path('', include('todo.urls')),  # 👈 this connects todo app
 ]
 
+
